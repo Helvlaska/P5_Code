@@ -54,6 +54,19 @@ function getId(url) {
 }
 getId(url)
 
-
+let ecouteBouton = document.getElementById("addToCart");
+ecouteBouton.addEventListener('click', 
+    function setPanier(){
+        let chooseQuantity = document.getElementById("quantity").value;
+        let chooseColor = document.getElementById("colors").value;
+        let priceValue = document.getElementById("price").textContent*chooseQuantity;
+        let objProduct = {
+            id : urlId,
+            quantity : chooseQuantity,
+            color : chooseColor,
+            price : priceValue
+        }
+        localStorage.setItem("panier", JSON.stringify(objProduct));
+    })
 
 
