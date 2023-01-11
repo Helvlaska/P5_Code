@@ -9,7 +9,6 @@ function getId(url) {
     .then(function(response){
         if (response.ok) {
             return response.json();
-            
         } 
     })
     //utiliser les infos 
@@ -55,62 +54,33 @@ function getId(url) {
 getId(url)
 
 let ecouteBouton = document.getElementById("addToCart");
+class product {
+    constructor(id, quantity, color) {
+        this.id = id;
+        this.quantity = quantity;
+        this.color = color;
+    }
+}
 
-function savePanier(){
-
+function addPanier(){
     let chooseQuantity = document.getElementById("quantity").value;
     let chooseColor = document.getElementById("colors").value;
-    //let priceValue = document.getElementById("price").textContent*chooseQuantity;
-    let objProduct = {
-        id : urlId,
-        quantity : chooseQuantity,
-        color : chooseColor,
-        //price : priceValue
-    }
-    let productInPanier = JSON.parse(localStorage.getItem("panier"))
-    //  si il y a un produit dans le local storage envoyer l'objet en format json //
+    
+    let newproduct = new product(urlId, chooseQuantity, chooseColor);
+    let productInPanier = JSON.parse(localStorage.getItem("panier"));
+    
     if(productInPanier){
             
-        productInPanier.push(objProduct)
+        productInPanier.push(newproduct)
         localStorage.setItem("panier", JSON.stringify(productInPanier))
     }
-    // si il n'y a pas de produit dans le local storage envoyer l'objet en format json //
-    else{
+    else {
         productInPanier = []
-        productInPanier.push(objProduct)
+        productInPanier.push(newproduct)
         localStorage.setItem("panier", JSON.stringify(productInPanier))
     }
 }
-/*function savePanier(){
-    let chooseQuantity = document.getElementById("quantity").value;
-    let chooseColor = document.getElementById("colors").value;
-    //let priceValue = document.getElementById("price").textContent*chooseQuantity;
-    let objProduct = {
-        id : urlId,
-        quantity : chooseQuantity,
-        color : chooseColor,
-        //price : priceValue
-    }
-    let productInPanier = JSON.parse(localStorage.getItem("panier"))
-    if(productInPanier){
-        productInPanier.push(objProduct);
-        localStorage.setItem("panier", JSON.stringify(productInPanier));
-    }
-    else if((objProduct.this.urlId(value) === productInPanier.this.urlId(value)) && (objProduct.this.chooseColor(value) != productInPanier.this.chooseColor(value))) {
-        productInPanier = []
-        productInPanier.push(objProduct);
-        localStorage.setItem("panier", JSON.stringify(productInPanier));
-    }
-    else if((objProduct.this.urlId(value) === productInPanier.this.urlId(value)) && (objProduct.this.chooseColor(value) === productInPanier.this.chooseColor(value))) {
-        objProduct.this.chooseQuantity(value) += productInPanier.this.chooseQuantity(value);
-    }
-    else{
-        productInPanier = []
-        productInPanier.push(objProduct)
-        localStorage.setItem("panier", JSON.stringify(productInPanier))
-    }
-}*/
-ecouteBouton.addEventListener('click', savePanier);
+ecouteBouton.addEventListener('click', addPanier);
 
 
 
