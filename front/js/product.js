@@ -52,8 +52,10 @@ function getId(url) {
 
 }
 getId(url)
-
+//créer et envoyer les produits sous forme d'objet dans le localStorage
+//pointer l'élément à écouter (déclanche l'évenement d'envoie dans le localStorage)
 let ecouteBouton = document.getElementById("addToCart");
+//création du modèle de l'objet avec sa class
 class product {
     constructor(id, quantity, color) {
         this.id = id;
@@ -61,25 +63,33 @@ class product {
         this.color = color;
     }
 }
-
+//création de la fonction qui va générer et envoyer l'objet
 function addPanier(){
+    //récupère les valeurs de la quantité et de la couleur choisies sur la page produit
     let chooseQuantity = document.getElementById("quantity").value;
     let chooseColor = document.getElementById("colors").value;
-    
+    //créer une variable qui va créer l'objet
     let newproduct = new product(urlId, chooseQuantity, chooseColor);
+    //variable qui va récupérer les données du localStorage
     let productInPanier = JSON.parse(localStorage.getItem("panier"));
-    
+    //si dans le localStorage il y un élément...
     if(productInPanier){
-            
+        //envoyer le nouvel objet    
         productInPanier.push(newproduct)
+        //sauvegarder le localStorage
         localStorage.setItem("panier", JSON.stringify(productInPanier))
     }
+    //sinon...
     else {
+        //créer un nouveau tableau
         productInPanier = []
+        //envoyer le nouvel objet
         productInPanier.push(newproduct)
+        //sauvegarder le localStorage
         localStorage.setItem("panier", JSON.stringify(productInPanier))
     }
 }
+//au click faire appel à la fonction ci-dessus
 ecouteBouton.addEventListener('click', addPanier);
 
 

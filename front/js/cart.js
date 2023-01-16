@@ -85,6 +85,7 @@ function getPanier(panier){
                             itemsBlocParam.appendChild(itemsParamDelete);
         
                             let itemsDelete = document.createElement("p");
+                            itemsDelete.classList.add("deleteItem");
                             itemsDelete.textContent = "Supprimer";
                             itemsParamDelete.appendChild(itemsDelete);
                         }
@@ -96,7 +97,11 @@ function getPanier(panier){
         }
         //Appel de la fonction pour chaque item du localStorage, en concordance avec leurs id
         checkApi(url);
+        /*console.log(panier[i].id)
+        console.log(panier[i].color)
+        const result = panier.filter(p => p.id == panier[i].id)
+        console.log(result)*/
     }
 }
 
-getPanier(panier);
+getPanier(panier); 
