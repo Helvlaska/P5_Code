@@ -52,10 +52,10 @@ function getId(url) {
 
 }
 getId(url)
-//créer et envoyer les produits sous forme d'objet dans le localStorage
-//pointer l'élément à écouter (déclanche l'évenement d'envoie dans le localStorage)
+
+//variable de récupération de l'élément sur lequel on va appliquer une écoute d'évenement
 let ecouteBouton = document.getElementById("addToCart");
-//création du modèle de l'objet avec sa class
+//création d'un modèle d'objet pour enregistrer toutes les valeurs dans un seul item
 class product {
     constructor(id, quantity, color) {
         this.id = id;
@@ -63,34 +63,44 @@ class product {
         this.color = color;
     }
 }
-//création de la fonction qui va générer et envoyer l'objet
+//récupération des données du localStorage
+let productInPanier = JSON.parse(localStorage.getItem("panier"));
+//fonction pour ajouter un nouvel obj au localStorage sans multiplier les obj avec le même id et la même couleur
 function addPanier(){
-    //récupère les valeurs de la quantité et de la couleur choisies sur la page produit
-    let chooseQuantity = document.getElementById("quantity").value;
-    let chooseColor = document.getElementById("colors").value;
-    //créer une variable qui va créer l'objet
-    let newproduct = new product(urlId, chooseQuantity, chooseColor);
-    //variable qui va récupérer les données du localStorage
-    let productInPanier = JSON.parse(localStorage.getItem("panier"));
-    //si dans le localStorage il y un élément...
-    if(productInPanier){
-        //envoyer le nouvel objet    
-        productInPanier.push(newproduct)
-        //sauvegarder le localStorage
-        localStorage.setItem("panier", JSON.stringify(productInPanier))
+    //variables pour récuperer la couleur et la quantité choisie
+    let chooseColor = document.querySelector("#colors").value;
+    let chooseQuantity = document.querySelector("#quantity").value;
+    //variable de création de l'objet avec les valeurs récupérées
+    let newProduct = new product(urlId, chooseQuantity, chooseColor);
+    //si il y a des produits dans le localStorage...
+    if (productInPanier){
+        // initialiser la recherche de l'objet qui a le même id et la même couleur que le produit qui veut être rajouté
+        let findArticle = productInPanier.find((element) => element.id === urlId && element.color === chooseColor);
+        // si produit trouvé avec id et couleur pareil...
+        if (findArticle) {
+            //modifier les données string en number (parsInt(x,10), 10 pour une valeur en décimale)
+            let quantityFindArticle = parseInt(findArticle.quantity,10);
+            let quantityChooseQuantity = parseInt(chooseQuantity,10);
+            // variable de récupération de quantité dans le localStorage + nouvelle valeur à ajouter
+            let newQuantity = quantityFindArticle + quantityChooseQuantity;
+            findArticle.quantity = newQuantity
+            // envoie de la nouvelle quantité en version json 
+            localStorage.setItem("panier", JSON.stringify(productInPanier));
+        }
+        // ...sinon ajout du produit au tableau
+        else {
+            productInPanier.push(newProduct);
+            localStorage.setItem("panier", JSON.stringify(productInPanier));
+        }         
     }
-    //sinon...
-    else {
-        //créer un nouveau tableau
-        productInPanier = []
-        //envoyer le nouvel objet
-        productInPanier.push(newproduct)
-        //sauvegarder le localStorage
-        localStorage.setItem("panier", JSON.stringify(productInPanier))
+    //... si localStorage vide
+    else{ 
+        //créer un nouvel array
+        productInPanier = [];
+        //envoyer l'objet dans le localStorage
+        productInPanier.push(newProduct);
+        //Mémoriser dans le localStorage
+        localStorage.setItem("panier", JSON.stringify(productInPanier));
     }
 }
-//au click faire appel à la fonction ci-dessus
 ecouteBouton.addEventListener('click', addPanier);
-
-
-
