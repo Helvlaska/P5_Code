@@ -70,8 +70,10 @@ function addPanier(){
     //variables pour récuperer la couleur et la quantité choisie
     let chooseColor = document.querySelector("#colors").value;
     let chooseQuantity = document.querySelector("#quantity").value;
+    //modifier les données string en number (parsInt(x,10), 10 pour une valeur en décimale)
+    let quantityChooseQuantity = parseInt(chooseQuantity,10);
     //variable de création de l'objet avec les valeurs récupérées
-    let newProduct = new product(urlId, chooseQuantity, chooseColor);
+    let newProduct = new product(urlId, quantityChooseQuantity, chooseColor);
     //si il y a des produits dans le localStorage...
     if (productInPanier){
         // initialiser la recherche de l'objet qui a le même id et la même couleur que le produit qui veut être rajouté
@@ -80,7 +82,6 @@ function addPanier(){
         if (findArticle) {
             //modifier les données string en number (parsInt(x,10), 10 pour une valeur en décimale)
             let quantityFindArticle = parseInt(findArticle.quantity,10);
-            let quantityChooseQuantity = parseInt(chooseQuantity,10);
             // variable de récupération de quantité dans le localStorage + nouvelle valeur à ajouter
             let newQuantity = quantityFindArticle + quantityChooseQuantity;
             findArticle.quantity = newQuantity
