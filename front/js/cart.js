@@ -118,20 +118,30 @@ function getPanier(panier){
 
                 //fonction pour modifier la quantité des produits dans le panier 
                 function changeQuantity(){
+                    //variable pour pointer tout les input de changement de quantité du panier
                     let quantityButton = document.querySelectorAll('.itemQuantity');
+                    //boucle pour parcourir les input de quantité
                     for(let button of Array.from(quantityButton)){
+                        //Application d'une ecoute au changement de valeur des input de quantité
                         button.addEventListener("change", evt =>{
-                            console.log("quantité modifiée !");
+                            //variable pour regrouper les informations des articles produits dans le panier
                             let getArticle = evt.target.closest(".cart__item");
+                            //variable de récupération de l'id du produit
                             let kanapId = getArticle.getAttribute('data-id');
+                            //variable de récupération de la couleur du produit
                             let kanapColor = getArticle.getAttribute('data-color');
-                            let quantityItem = evt.target.closest(".itemQuantity");
-                            let kanapQuantity = quantityItem.getAttribute('value');
-                            console.log(kanapQuantity);
+                            //variable de récupération de la nouvelle valeur de quantité + (string -> number)
+                            let kanapQuantity = parseInt(evt.target.value ,10);
+                            //récupération des infos du localStorage
                             let productInPanier = JSON.parse(localStorage.getItem("panier"));
+                            //constente pour rechercher les produits avec le même id et même couleur dans le localStorage
                             const searchQuantityChange = productInPanier.find(element => element.id == kanapId && element.color == kanapColor);
+                            //modifier la quantité de l'objet dans le localStorage qui correspond à la recherche precedente
                             searchQuantityChange.quantity = kanapQuantity;
+                            //envoie du nouvel objet dans le localStorage pour remplacer l'ancien
                             localStorage.setItem("panier", JSON.stringify(productInPanier));
+                            //rafraichissement de la page pour que le prix et la quantité total se mette à jour
+                            window.location.href = "cart.html";
                         })  
                     }
                 }
