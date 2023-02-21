@@ -184,3 +184,158 @@ function getPanier(panier){
     }
 }
 getPanier(panier);
+
+//test de fonction de validation de formulaire 
+function checkForm(){
+    //variable pour pointer le formulaire
+    let form = document.querySelector('.cart__order__form');
+    //ecouter la modification du champ "prenom"
+    form.firstName.addEventListener('change', function(){
+        validPrenom(this) //this = élément qui est en train d'être écouté 
+    })
+    //création d'une regexp de validation de prenom 
+    const validPrenom = function(inputPrenom){
+        //variable qui va créer le nouveau motif de regex : les majuscules, minuscules, avec ou sans accents sont acceptés, les prenoms composés aussi 
+        let prenomRegExp = new RegExp ('^[A-ZÇÉÈÊËÀÂÎÏÔÙÛa-zçéèêëàâîïôùû\'\ \-]{2,100}$','g');
+        //variable pour pointer le message d'erreur
+        let firstNameError = document.getElementById("firstNameErrorMsg");
+        //si la regexp = true alors ...
+        if(prenomRegExp.test(inputPrenom.value)){
+            //message d'erreur est vide
+            firstNameError.textContent = "";
+            return true;
+        }
+        //sinon ...
+        else{
+            //le message d'erreur apparait 
+            firstNameError.textContent = "Prénom non valide !";
+            return false;
+        }
+    };
+    //ecouter la modification du champ de nom
+    form.lastName.addEventListener('change', function(){
+        validNom(this) //this = élément qui est en train d'être écouté 
+    })
+    //création d'une regexp de validation de nom 
+    const validNom = function(inputNom){
+        //variable qui va créer le nouveau motif de regex : les majuscules, minuscules, avec ou sans accents sont acceptés, les noms composés aussi 
+        let nomRegExp = new RegExp ('^[A-ZÇÉÈÊËÀÂÎÏÔÙÛa-zçéèêëàâîïôùû\'\ \-]{2,100}$','g');
+        //variable pour pointer le message d'erreur
+        let NameError = document.getElementById("lastNameErrorMsg");
+        //si la regexp = true alors ...
+        if(nomRegExp.test(inputNom.value)){
+            //message d'erreur est vide
+            NameError.textContent = "";
+            return true;
+        }
+        //sinon ...
+        else{
+            //le message d'erreur apparait 
+            NameError.textContent = "Nom non valide !";
+            return false;
+        }
+    };
+    //ecouter la modification du champ de nom
+    form.address.addEventListener('change', function(){
+        validAdress(this) //this = élément qui est en train d'être écouté 
+    })
+    //création d'une regexp de validation d'adresse 
+    const validAdress = function(inputAdress){
+        //variable qui va créer le nouveau motif de regex : numéro + lettre 
+        let adressRegExp = new RegExp ('^[1-9A-ZÇÉÈÊËÀÂÎÏÔÙÛa-zçéèêëàâîïôùû\,\'\ \-]{2,100}$','g');
+        //variable pour pointer le message d'erreur
+        let addressError = document.getElementById("addressErrorMsg");
+        //si la regexp = true alors ...
+        if(adressRegExp.test(inputAdress.value)){
+            //message d'erreur est vide
+            addressError.textContent = "";
+            return true;
+        }
+        //sinon ...
+        else{
+            //le message d'erreur apparait
+            addressError.textContent = "Adresse non valide !";
+            return false;
+        }
+    };
+    //ecouter la modification du champ de nom
+    form.city.addEventListener('change', function(){
+        validCity(this) //this = élément qui est en train d'être écouté 
+    })
+    //création d'une regexp de validation ville 
+    const validCity = function(inputCity){
+        //variable qui va créer le nouveau motif de regex accents + caractères spéciaux
+        let cityRegExp = new RegExp ('^[A-ZÇÉÈÊËÀÂÎÏÔÙÛa-zçéèêëàâîïôùû\'\ \-]{2,100}$','g');
+        //variable pour pointer le message d'erreur
+        let cityError = document.getElementById("cityErrorMsg");
+        //si la regexp = true alors ...
+        if(cityRegExp.test(inputCity.value)){
+            //message d'erreur est vide
+            cityError.textContent = "";
+            return true;
+        }
+        //sinon ...
+        else{
+            //le message d'erreur apparait
+            cityError.textContent = "Ville non valide !";
+            return false;
+        }
+    };
+    //ecouter la modification du champ de nom
+    form.email.addEventListener('change', function(){
+        validEmail(this) //this = élément qui est en train d'être écouté 
+    })
+    //création d'une regexp de validation ville 
+    const validEmail = function(inputEmail){
+        //variable qui va créer le nouveau motif de regex d'email
+        let emailRegExp = new RegExp ('^[A-ZÇÉÈÊËÀÂÎÏÔÙÛa-zçéèêëàâîïôùû1-9\.\_\-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}$','g');
+        //variable pour pointer le message d'erreur
+        let emailError = document.getElementById("emailErrorMsg");
+        //si la regexp = true alors ...
+        if(emailRegExp.test(inputEmail.value)){
+            //message d'erreur est vide
+            emailError.textContent = "";
+            return true;
+        }
+        //sinon ...
+        else{
+            //le message d'erreur apparait
+            emailError.textContent = "email non valide !";
+            return false;
+        }
+    }
+    //création d'un modèle d'objet
+    class contact {
+        constructor(firstName, lastName, address, city, email) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.address = address;
+            this.city = city;
+            this.email = email;
+        }
+    }
+    //écoute de l'envoie du formulaire
+    form.addEventListener('submit', function(evt){
+        //suppression de l'envoie automatique du formulaire
+        evt.preventDefault();
+        //si les différents champs du formulaire sont valides alors ...
+        if(validPrenom(form.firstName) && validNom(form.lastName) && validAdress(form.address) && validCity(form.city) && validEmail(form.email)){
+            //variables pour récupérer les donner du formulaire
+            let prenom = form.firstName.value;
+            let nom = form.lastName.value;
+            let adresse = form.address.value;
+            let ville = form.city.value;
+            let mail = form.email.value;
+            //création d'un nouvel objet avec les valeurs du formulaire
+            let newContact = new contact(prenom, nom, adresse, ville, mail);
+            console.log(newContact);
+            form.setAttribute("action", "http") 
+        }
+        //sinon ... rien ne se passe, la suppression auto de l'envoie de formulaire reste active
+    })
+    //objet à afficher sur la page confirmation.html + envoyer objet dans l'URL
+    //checker dans Api le numéro de commande
+    //confirmation.js juste numéro de commande avec Id
+}
+checkForm();
+
