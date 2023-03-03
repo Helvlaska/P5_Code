@@ -12,7 +12,7 @@ function getData(url){
         .then(function(value) {
 
             for(let items of value) {
-                
+                console.log(items)
                 let itemsLink = document.createElement("a");
                 itemsLink.setAttribute("href", `./product.html?id=${items._id}`);
                 itemsBloc.appendChild(itemsLink);

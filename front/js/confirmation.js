@@ -1,0 +1,1 @@
+let urlId = new URL(location.href).searchParams.get("id");

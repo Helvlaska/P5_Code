@@ -15,14 +15,16 @@ let itemColor = 0;
 function getPanier(panier){
     //boucle qui va parcourir le localStorage, s'arrête à la fin de la liste
     for(let i=0; i<panier.length; i++){
-        //Appelle de l'API pour récupérer les valeurs de l'API
+        //Appel de l'API pour récupérer les valeurs de l'API
         function checkApi(url){
             fetch(url)
+            //verifier si l'api répond à l'appel
             .then(function(response){
                 if (response.ok) {
                     return response.json();
                 } 
             })
+            //si l'appel de l'api est ok alors ...
             .then (function(value){
                 //Boucle qui va récupérer les valeurs de l'API...
                 for(items of value){
@@ -176,6 +178,7 @@ function getPanier(panier){
                 } 
                 deleteItem(); 
             })
+            //si l'appel a l'api est nok alors envoyer un message d'erreur en console
             .catch(function(error) {
                 console.log(error);
             });
@@ -189,6 +192,8 @@ getPanier(panier);
 function checkForm(){
     //variable pour pointer le formulaire
     let form = document.querySelector('.cart__order__form');
+    //ajout d'un attribut action au formulaire, quand il sera validé et envoyé il renverra vers la page confirmation.html
+    form.setAttribute("action", "confirmation.html");
     //ecouter la modification du champ "prenom"
     form.firstName.addEventListener('change', function(){
         validPrenom(this) //this = élément qui est en train d'être écouté 
@@ -304,38 +309,60 @@ function checkForm(){
             return false;
         }
     }
-    //création d'un modèle d'objet
-    class contact {
-        constructor(firstName, lastName, address, city, email) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.address = address;
-            this.city = city;
-            this.email = email;
-        }
-    }
     //écoute de l'envoie du formulaire
     form.addEventListener('submit', function(evt){
         //suppression de l'envoie automatique du formulaire
         evt.preventDefault();
         //si les différents champs du formulaire sont valides alors ...
         if(validPrenom(form.firstName) && validNom(form.lastName) && validAdress(form.address) && validCity(form.city) && validEmail(form.email)){
-            //variables pour récupérer les donner du formulaire
-            let prenom = form.firstName.value;
-            let nom = form.lastName.value;
-            let adresse = form.address.value;
-            let ville = form.city.value;
-            let mail = form.email.value;
-            //création d'un nouvel objet avec les valeurs du formulaire
-            let newContact = new contact(prenom, nom, adresse, ville, mail);
-            console.log(newContact);
-            form.setAttribute("action", "http") 
+            //création d'un objet contact avec les valeurs du formulaire
+            let contact = {
+                firstName : form.firstName.value,
+                lastName : form.lastName.value,
+                address : form.address.value,
+                city : form.city.value,
+                email : form.email.value
+            }
+            //Ajout du tableau récapitulatif de commande
+            let products = [];
+            //si il y a des produits dans le localStorage alors...
+            if (localStorage.getItem("panier")){
+                //récupérer le localStorage
+                let command = JSON.parse(localStorage.getItem("panier"));
+                //boucle pour parcourir le localStorage et récupérer dans un array les id des produits du panier
+                for(let product of command){
+                    products.push(product.id)
+                }
+            }
+            //envoie des données vers le server via la method POST de fetch et récupération de la réponse avec le numéro de commande
+            fetch("http://localhost:3000/api/products/order", {
+                method : 'POST',
+                headers : {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json"
+                },
+                body : JSON.stringify({contact, products})
+            })
+            .then(function(response){
+                if (response.ok) {
+                    const apiValue = response.json();
+                    console.log(apiValue)
+                    return apiValue;
+                } 
+            })
+            .then (function(apiValue){
+                //renvoi vers la page de confirmation avec l'ID de commande
+			    window.location.href = `confirmation.html?orderId=${apiValue.orderId}`;
+                //supprimer localStorage quand commande passée
+                localStorage.removeItem('panier');
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
         }
         //sinon ... rien ne se passe, la suppression auto de l'envoie de formulaire reste active
     })
-    //objet à afficher sur la page confirmation.html + envoyer objet dans l'URL
-    //checker dans Api le numéro de commande
-    //confirmation.js juste numéro de commande avec Id
+    
 }
 checkForm();
 
