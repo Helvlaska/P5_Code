@@ -188,7 +188,7 @@ function getPanier(panier){
 }
 getPanier(panier);
 
-//test de fonction de validation de formulaire 
+//Fonction de validation de formulaire 
 function checkForm(){
     //variable pour pointer le formulaire
     let form = document.querySelector('.cart__order__form');
