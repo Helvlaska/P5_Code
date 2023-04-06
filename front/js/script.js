@@ -1,7 +1,5 @@
 // Adresse url de l'API
 const url = "http://localhost:3000/api/products";
-// Variable pour pointer la section avec l'id "items"
-let itemsBloc = document.getElementById("items");
 
 // Création d'une fonction pour faire appel à l'Api
 function getData(url){
@@ -17,6 +15,8 @@ function getData(url){
         })
         // traitement des donées récupérées
         .then(function(value) {
+            // Variable pour pointer la section avec l'id "items"
+            let itemsBloc = document.getElementById("items");
             // Création d'une boucle qui va parcourir l'api
             for(let items of value) {
                 //création d'un bloc html via javascript
