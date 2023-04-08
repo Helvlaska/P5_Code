@@ -2,15 +2,12 @@
 const panier = JSON.parse(localStorage.getItem("panier"));
 // url de l'API
 const url = `http://localhost:3000/api/products`;
-//Pointeur pour création de carte produit pour 1 item
-const card = document.getElementById("cart__items");
 //Variable pour le prix/quantité total
-let calculPrice = 0;
-let priceTotal = 0;
-let quantityTotal = 0;
-let quantityValue = 0;
-let itemId = 0;
-let itemColor = 0;
+var calculPrice = 0;
+var priceTotal = 0;
+var quantityTotal = 0;
+var quantityValue = 0;
+
 // création d'une fonction pour récupérer et afficher les items du panier(localStorage)
 function getPanier(panier){
     //boucle qui va parcourir le localStorage, s'arrête à la fin de la liste
@@ -26,83 +23,139 @@ function getPanier(panier){
             })
             //si l'appel de l'api est ok alors ...
             .then (function(value){
+                //Pointeur pour création de carte produit pour x1 item
+                let card = document.getElementById("cart__items");
                 //Boucle qui va récupérer les valeurs de l'API...
                 for(items of value){
                     //...si l'id de l'item du localStorage est le même que l'id de l'API alors ...
                     if(panier[i].id === items._id){
                         // ...création des cartes produit du panier
+
+                        //création d'un élément html <article>
                         let itemsArticle = document.createElement("article");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsArticle.classList.add("cart__item");
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsArticle.setAttribute("data-id", `${panier[i].id}`);
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsArticle.setAttribute("data-color", `${panier[i].color}`);
+                        //filliation à l'élément parent : "itemsArticle" devient enfant de "card"
                         card.appendChild(itemsArticle);
-        
+
+                        //création d'un élément html <div>
                         let itemsBlocImg = document.createElement("div");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsBlocImg.classList.add("cart__item__img");
+                        //filliation à l'élément parent : "itemsBlocImg" devient enfant de "itemsArticle"
                         itemsArticle.appendChild(itemsBlocImg);
-        
+
+                        //création d'un élément html <img>
                         let itemsImg = document.createElement("img");
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsImg.setAttribute("src", `${items.imageUrl}`);
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsImg.setAttribute("alt", `${items.altTxt}`);
+                        //filliation à l'élément parent : "itemsImg" devient enfant de "itemsBlocImg"
                         itemsBlocImg.appendChild(itemsImg);
-        
+                        
+                        //création d'un élément html <div>
                         let itemsBlocContent = document.createElement("div");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsBlocContent.classList.add("cart__item__content");
+                        //filliation à l'élément parent : "itemsBlocContent" devient enfant de "itemsArticle"
                         itemsArticle.appendChild(itemsBlocContent);
-        
+                        
+                        //création d'un élément html <div>
                         let itemsBlocDescription = document.createElement("div");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsBlocDescription.classList.add("cart__item__content__description");
+                        //filliation à l'élément parent : "itemsBlocDescription" devient enfant de "itemsBlocContent"
                         itemsBlocContent.appendChild(itemsBlocDescription);
-        
+                        
+                        //création d'un élément html <h2>
                         let itemsTitle = document.createElement("h2");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsTitle.classList.add("productName");
+                        //Attribution d'un contenu de type texte dans l'élément html
                         itemsTitle.textContent = `${items.name}`;
+                        //filliation à l'élément parent : "itemsTitle" devient enfant de "itemsBlocDescription"
                         itemsBlocDescription.appendChild(itemsTitle);
-        
+
+                        //création d'un élément html <p>
                         let itemsColor = document.createElement("p");
+                        //Attribution d'un contenu de type texte dans l'élément html
                         itemsColor.textContent = `${panier[i].color}`;
+                        //filliation à l'élément parent : "itemsColor" devient enfant de "itemsBlocDescription"
                         itemsBlocDescription.appendChild(itemsColor);
-        
+                        
+                        //création d'un élément html <p>
                         let itemsPrice = document.createElement("p");
                         //calcul pour multiplier la quantité par le prix de l'item
-                        calculPrice = parseInt(`${items.price}`) * parseInt(`${panier[i].quantity}`);
+                        var calculPrice = parseInt(`${items.price}`) * parseInt(`${panier[i].quantity}`);
+                        //Attribution d'un contenu de type texte dans l'élément html
                         itemsPrice.textContent = calculPrice;
+                        //filliation à l'élément parent : "itemsPrice" devient enfant de "itemsBlocDescription"
                         itemsBlocDescription.appendChild(itemsPrice);
-        
+                        
+                        //création d'un élément html <div>
                         let itemsBlocParam = document.createElement("div");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsBlocParam.classList.add("cart__item__content__settings");
+                        //filliation à l'élément parent : "itemsBlocParam" devient enfant de "itemsBlocContent"
                         itemsBlocContent.appendChild(itemsBlocParam);
-        
+                        
+                        //création d'un élément html <div>
                         let itemsParamQte = document.createElement("div");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsParamQte.classList.add("cart__item__content__settings__quantity");
+                        //filliation à l'élément parent : "itemsParamQte" devient enfant de "itemsBlocParam"
                         itemsBlocParam.appendChild(itemsParamQte);
-        
+                        
+                        //création d'un élément html <p>
                         let itemsQuantity = document.createElement("p");
+                        //Attribution d'un contenu de type texte dans l'élément html
                         itemsQuantity.textContent = "Qté : ";
+                        //filliation à l'élément parent : "itemsQuantity" devient enfant de "itemsParamQte"
                         itemsParamQte.appendChild(itemsQuantity);
-        
+                        
+                        //création d'un élément html <input>
                         let itemsInput = document.createElement("input");
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsInput.setAttribute("type", "number");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsInput.classList.add("itemQuantity");
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsInput.setAttribute("name", "itemQuantity");
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsInput.setAttribute("min", "1");
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsInput.setAttribute("max", "100");
-                        quantityValue = parseInt(`${panier[i].quantity}`);
+                        //changer le type de valeur de string à number
+                        var quantityValue = parseInt(`${panier[i].quantity}`);
+                        //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsInput.setAttribute("value", quantityValue);
+                        //filliation à l'élément parent : "itemsInput" devient enfant de "itemsParamQte"
                         itemsParamQte.appendChild(itemsInput);
-        
+                        
+                        //création d'un élément html <div>
                         let itemsParamDelete = document.createElement("div");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsParamDelete.classList.add("cart__item__content__settings__delete");
+                        //filliation à l'élément parent : "itemsParamDelete" devient enfant de "itemsBlocParam"
                         itemsBlocParam.appendChild(itemsParamDelete);
-        
+                        
+                        //création d'un élément html <p>
                         let itemsDelete = document.createElement("p");
+                        //ajout d'une class à l'élément html précédement créé
                         itemsDelete.classList.add("deleteItem");
+                        //Attribution d'un contenu de type texte dans l'élément html
                         itemsDelete.textContent = "Supprimer";
+                        //filliation à l'élément parent : "itemsDelete" devient enfant de "itemsParamDelete"
                         itemsParamDelete.appendChild(itemsDelete);
                     }
                 }   
                 //fonction de calcul du total de produits et de prix du panier 
-                function getTotal() {
+                /*function getTotal() {
                     // la quantité totale (quantityTotal) est égale à la sommes des valeurs de quantité/items(quantityValue)
                     quantityTotal += quantityValue;
                     //pointeur sur l'élément HTML avec pour id="totalQuantity"
@@ -176,7 +229,8 @@ function getPanier(panier){
                         })
                     }
                 } 
-                deleteItem(); 
+                deleteItem();*/
+                return getPanier(panier);
             })
             //si l'appel a l'api est nok alors envoyer un message d'erreur en console
             .catch(function(error) {
@@ -188,6 +242,8 @@ function getPanier(panier){
 }
 getPanier(panier);
 
+console.log(calculPrice);
+console.log(quantityValue);
 //Fonction de validation de formulaire 
 function checkForm(){
     //variable pour pointer le formulaire
