@@ -91,7 +91,7 @@ function getPanier(panier){
                         //création d'un élément html <p>
                         let itemsPrice = document.createElement("p");
                         //calcul pour multiplier la quantité par le prix de l'item
-                        var calculPrice = parseInt(`${items.price}`) * parseInt(`${panier[i].quantity}`);
+                        calculPrice = parseInt(`${items.price}`) * parseInt(`${panier[i].quantity}`);
                         //Attribution d'un contenu de type texte dans l'élément html
                         itemsPrice.textContent = calculPrice;
                         //filliation à l'élément parent : "itemsPrice" devient enfant de "itemsBlocDescription"
@@ -131,7 +131,7 @@ function getPanier(panier){
                         //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsInput.setAttribute("max", "100");
                         //changer le type de valeur de string à number
-                        var quantityValue = parseInt(`${panier[i].quantity}`);
+                        quantityValue = parseInt(`${panier[i].quantity}`);
                         //Ajout d'un attribut et sa valeur à l'élément précédement créé
                         itemsInput.setAttribute("value", quantityValue);
                         //filliation à l'élément parent : "itemsInput" devient enfant de "itemsParamQte"
@@ -152,85 +152,85 @@ function getPanier(panier){
                         itemsDelete.textContent = "Supprimer";
                         //filliation à l'élément parent : "itemsDelete" devient enfant de "itemsParamDelete"
                         itemsParamDelete.appendChild(itemsDelete);
+
+                        //fonction de calcul du total de produits et de prix du panier 
+                        function getTotal() {
+                            // la quantité totale (quantityTotal) est égale à la sommes des valeurs de quantité/items(quantityValue)
+                            quantityTotal += quantityValue;
+                            //pointeur sur l'élément HTML avec pour id="totalQuantity"
+                            let totalItems = document.getElementById("totalQuantity");
+                            //attribuer à l'élément la valeur de quantityTotal
+                            totalItems.textContent = `${quantityTotal}`;
+                            // le prix total (priceTotal) est égale à la sommes des valeurs de prix/items(calculPrice)
+                            priceTotal += calculPrice;
+                            //pointeur sur l'élément HTML avec pour id="totalPrice"
+                            let totalPrice = document.getElementById("totalPrice");
+                            //attribuer à l'élément la valeur de priceTotal
+                            totalPrice.textContent = `${priceTotal}`;
+                        }  
+                        getTotal(panier);
+
+                        //fonction pour modifier la quantité des produits dans le panier 
+                        function changeQuantity(){
+                            //variable pour pointer tout les input de changement de quantité du panier
+                            let quantityButton = document.querySelectorAll('.itemQuantity');
+                            //boucle pour parcourir les input de quantité
+                            for(let button of Array.from(quantityButton)){
+                                //Application d'une ecoute au changement de valeur des input de quantité
+                                button.addEventListener("change", evt =>{
+                                    //variable pour regrouper les informations des articles produits dans le panier
+                                    let getArticle = evt.target.closest(".cart__item");
+                                    //variable de récupération de l'id du produit
+                                    let kanapId = getArticle.getAttribute('data-id');
+                                    //variable de récupération de la couleur du produit
+                                    let kanapColor = getArticle.getAttribute('data-color');
+                                    //variable de récupération de la nouvelle valeur de quantité + (string -> number)
+                                    let kanapQuantity = parseInt(evt.target.value ,10);
+                                    //récupération des infos du localStorage
+                                    let productInPanier = JSON.parse(localStorage.getItem("panier"));
+                                    //constente pour rechercher les produits avec le même id et même couleur dans le localStorage
+                                    const searchQuantityChange = productInPanier.find(element => element.id == kanapId && element.color == kanapColor);
+                                    //modifier la quantité de l'objet dans le localStorage qui correspond à la recherche precedente
+                                    searchQuantityChange.quantity = kanapQuantity;
+                                    //envoie du nouvel objet dans le localStorage pour remplacer l'ancien
+                                    localStorage.setItem("panier", JSON.stringify(productInPanier));
+                                    //rafraichissement de la page pour que le prix et la quantité total se mette à jour
+                                    window.location.href = "cart.html";
+                                })  
+                            }
+                        }
+                        changeQuantity();
+                 
+                        //Fonction pour supprimer article du panier et du localStorage
+                        function deleteItem() {
+                            //Variable pour pointer tout les boutons "supprimer"
+                            let deleteButton = document.querySelectorAll('.deleteItem');
+                            //Boucle pour parcourir les boutons "supprimer"
+                            for (let button of  Array.from(deleteButton)){
+                                //Application d'une écoute sur les boutons "supprimer" au click
+                                button.addEventListener("click", evt =>{
+                                //variable pour pointer le contenu de l'article pointer par l'évènement
+                                    let getArticle = evt.target.closest(".cart__item");
+                                    //variable pour récupérer l'id du produit
+                                    let kanapId = getArticle.getAttribute('data-id');
+                                    //variable pour récupérer la couleur du produit
+                                    let kanapColor = getArticle.getAttribute('data-color');
+                                    //variable pour récupérer le panier du localStorage
+                                    let productInPanier = JSON.parse(localStorage.getItem("panier"));
+                                    //constente pour rechercher le produit avec le même id et même couleur dans le localStorage
+                                    const searchDeleteItem = productInPanier.find(element => element.id == kanapId && element.color == kanapColor);
+                                    //dans le panier du localStorage filtrer les produits qui ne correspondent pas à la recherche precedente afin de les concerver dans le localStorage
+                                    productInPanier = productInPanier.filter(item => item != searchDeleteItem);
+                                    //Envoyer dans le localStorage le nouveau panier
+                                    localStorage.setItem("panier", JSON.stringify(productInPanier));
+                                    //rafraichir la page panier
+                                    window.location.href = "cart.html";
+                                })
+                            }
+                        } 
+                        deleteItem();
                     }
                 }   
-                //fonction de calcul du total de produits et de prix du panier 
-                /*function getTotal() {
-                    // la quantité totale (quantityTotal) est égale à la sommes des valeurs de quantité/items(quantityValue)
-                    quantityTotal += quantityValue;
-                    //pointeur sur l'élément HTML avec pour id="totalQuantity"
-                    let totalItems = document.getElementById("totalQuantity");
-                    //attribuer à l'élément la valeur de quantityTotal
-                    totalItems.textContent = `${quantityTotal}`;
-                    // le prix total (priceTotal) est égale à la sommes des valeurs de prix/items(calculPrice)
-                    priceTotal += calculPrice;
-                    //pointeur sur l'élément HTML avec pour id="totalPrice"
-                    let totalPrice = document.getElementById("totalPrice");
-                    //attribuer à l'élément la valeur de priceTotal
-                    totalPrice.textContent = `${priceTotal}`;
-                }  
-                getTotal(panier);
-
-                //fonction pour modifier la quantité des produits dans le panier 
-                function changeQuantity(){
-                    //variable pour pointer tout les input de changement de quantité du panier
-                    let quantityButton = document.querySelectorAll('.itemQuantity');
-                    //boucle pour parcourir les input de quantité
-                    for(let button of Array.from(quantityButton)){
-                        //Application d'une ecoute au changement de valeur des input de quantité
-                        button.addEventListener("change", evt =>{
-                            //variable pour regrouper les informations des articles produits dans le panier
-                            let getArticle = evt.target.closest(".cart__item");
-                            //variable de récupération de l'id du produit
-                            let kanapId = getArticle.getAttribute('data-id');
-                            //variable de récupération de la couleur du produit
-                            let kanapColor = getArticle.getAttribute('data-color');
-                            //variable de récupération de la nouvelle valeur de quantité + (string -> number)
-                            let kanapQuantity = parseInt(evt.target.value ,10);
-                            //récupération des infos du localStorage
-                            let productInPanier = JSON.parse(localStorage.getItem("panier"));
-                            //constente pour rechercher les produits avec le même id et même couleur dans le localStorage
-                            const searchQuantityChange = productInPanier.find(element => element.id == kanapId && element.color == kanapColor);
-                            //modifier la quantité de l'objet dans le localStorage qui correspond à la recherche precedente
-                            searchQuantityChange.quantity = kanapQuantity;
-                            //envoie du nouvel objet dans le localStorage pour remplacer l'ancien
-                            localStorage.setItem("panier", JSON.stringify(productInPanier));
-                            //rafraichissement de la page pour que le prix et la quantité total se mette à jour
-                            window.location.href = "cart.html";
-                        })  
-                    }
-                }
-                changeQuantity();
-                 
-                //Fonction pour supprimer article du panier et du localStorage
-                function deleteItem() {
-                    //Variable pour pointer tout les boutons "supprimer"
-                    let deleteButton = document.querySelectorAll('.deleteItem');
-                    //Boucle pour parcourir les boutons "supprimer"
-                    for (let button of  Array.from(deleteButton)){
-                        //Application d'une écoute sur les boutons "supprimer" au click
-                        button.addEventListener("click", evt =>{
-                           //variable pour pointer le contenu de l'article pointer par l'évènement
-                            let getArticle = evt.target.closest(".cart__item");
-                            //variable pour récupérer l'id du produit
-                            let kanapId = getArticle.getAttribute('data-id');
-                            //variable pour récupérer la couleur du produit
-                            let kanapColor = getArticle.getAttribute('data-color');
-                            //variable pour récupérer le panier du localStorage
-                            let productInPanier = JSON.parse(localStorage.getItem("panier"));
-                            //constente pour rechercher le produit avec le même id et même couleur dans le localStorage
-                            const searchDeleteItem = productInPanier.find(element => element.id == kanapId && element.color == kanapColor);
-                            //dans le panier du localStorage filtrer les produits qui ne correspondent pas à la recherche precedente afin de les concerver dans le localStorage
-                            productInPanier = productInPanier.filter(item => item != searchDeleteItem);
-                            //Envoyer dans le localStorage le nouveau panier
-                            localStorage.setItem("panier", JSON.stringify(productInPanier));
-                            //rafraichir la page panier
-                            window.location.href = "cart.html";
-                        })
-                    }
-                } 
-                deleteItem();*/
-                return getPanier(panier);
             })
             //si l'appel a l'api est nok alors envoyer un message d'erreur en console
             .catch(function(error) {
@@ -242,8 +242,6 @@ function getPanier(panier){
 }
 getPanier(panier);
 
-console.log(calculPrice);
-console.log(quantityValue);
 //Fonction de validation de formulaire 
 function checkForm(){
     //variable pour pointer le formulaire
