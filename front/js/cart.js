@@ -365,8 +365,6 @@ function checkForm(){
     }
     //écoute de l'envoie du formulaire
     form.addEventListener('submit', function(evt){
-        //suppression de l'envoie automatique du formulaire
-        evt.preventDefault();
         //si les différents champs du formulaire sont valides alors ...
         if(validPrenom(form.firstName) && validNom(form.lastName) && validAdress(form.address) && validCity(form.city) && validEmail(form.email)){
             //création d'un objet contact avec les valeurs du formulaire
@@ -414,7 +412,11 @@ function checkForm(){
                 console.log(error);
             });
         }
-        //sinon ... rien ne se passe, la suppression auto de l'envoie de formulaire reste active
+        //sinon ... rien ne se passe, la suppression auto de l'envoie de formulaire
+        //suppression de l'envoie automatique du formulaire
+        else{
+            evt.preventDefault();
+        }
     })
     
 }
