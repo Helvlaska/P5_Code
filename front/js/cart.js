@@ -412,9 +412,8 @@ function checkForm(){
                 console.log(error);
             });
         }
-        //sinon ... rien ne se passe, la suppression auto de l'envoie de formulaire
-        //suppression de l'envoie automatique du formulaire
-        else{
+        //sinon ... rien ne se passe, suppression auto de l'envoie de formulaire
+        else {
             evt.preventDefault();
         }
     })
